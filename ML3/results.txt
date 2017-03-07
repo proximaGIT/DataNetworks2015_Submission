@@ -1,0 +1,20 @@
+/*
+ * Group 7
+ * Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+ * Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+ *
+ */
+ 
+-------------------------------------------------------------------------------
+                    Aloha Backoff               BEB
+-------------------------------------------------------------------------------
+             P=0.15    P=0.25     P=0.35
+-------------------------------------------------------------------------------
+csma         209.29    229.05     273.18       249.18
+csma/cd      201.87    217.71     249.24       222.18
+-------------------------------------------------------------------------------
+
+The protocol that perform the best is the CSMA/CD with ALOHA back off scheme.
+However the BEB counterpart still have the advantage that is it we don't need
+to specify any parameter. It will adapt automatically to the condition of the 
+network (number of nodes, link throughput) and give stable performance.

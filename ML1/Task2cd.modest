@@ -1,0 +1,334 @@
+﻿/* Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+
+Task2cd Description:
+- This model defines the protocol that is described in the modeling 
+  lab 1 - task 2 for question c and d.
+- Two clocks are used, one for the queue and the other one is for the server
+  to avoid the race condition.
+
+Task2cd Modes setting:
+-Resolver: Uniform
+-Scheduler: Strict
+-Batch Size: 1
+-Runs: 5000
+-Show Initial State: False
+-Collect Traces: False
+
+First result when T_ARRIVAL = 1
+	Analysis results for task2cd.modest
+	Total time: 45.0 s
+	
+	+ Property queue_length_100
+	  Mean: 50.4849999999999
+	  Runs: 5000
+	  Time: 45.0 s
+	
+	+ Property queue_length_200
+	  Mean: 100.4934
+	  Runs: 5000
+	  Time: 45.0 s
+	
+	+ Property queue_length_400
+	  Mean: 200.4552
+	  Runs: 5000
+	  Time: 45.0 s
+	
+	+ Property queue_length_800
+	  Mean: 399.345
+	  Runs: 5000
+	  Time: 45.0 s
+	
+	+ Property queue_length_1600
+	  Mean: 799.781400000001
+	  Runs: 5000
+	  Time: 45.0 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        45.0 s
+	
+	+ Property q_100
+	  Mean: 199.198123038117
+	  Runs: 5000
+	  Time: 45.0 s
+
+When traffic intensity = 50% (T_ARRIVAL = 4)
+	Analysis results for task2cd.modest
+	Total time: 13.5 s
+	
+	+ Property queue_length_100
+	  Mean: 0.529599999999999
+	  Runs: 5000
+	  Time: 13.5 s
+	
+	+ Property queue_length_200
+	  Mean: 0.408800000000001
+	  Runs: 5000
+	  Time: 13.5 s
+	
+	+ Property queue_length_400
+	  Mean: 0.470400000000001
+	  Runs: 5000
+	  Time: 13.5 s
+	
+	+ Property queue_length_800
+	  Mean: 0.451999999999999
+	  Runs: 5000
+	  Time: 13.5 s
+	
+	+ Property queue_length_1600
+	  Mean: 0.503599999999998
+	  Runs: 5000
+	  Time: 13.5 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        13.5 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 5000
+	  Time: 13.5 s
+	  
+When traffic intensity = 80% (T_ARRIVAL = 2.5)
+	Analysis results for task2cd.modest
+	Total time: 22.2 s
+	
+	+ Property queue_length_100
+	  Mean: 2.668
+	  Runs: 5000
+	  Time: 22.2 s
+	
+	+ Property queue_length_200
+	  Mean: 3.0842
+	  Runs: 5000
+	  Time: 22.2 s
+	
+	+ Property queue_length_400
+	  Mean: 3.1286
+	  Runs: 5000
+	  Time: 22.2 s
+	
+	+ Property queue_length_800
+	  Mean: 3.113
+	  Runs: 5000
+	  Time: 22.2 s
+	
+	+ Property queue_length_1600
+	  Mean: 3.291
+	  Runs: 5000
+	  Time: 22.2 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        22.2 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 5000
+	  Time: 22.2 s
+
+When traffic intensity = 90% (T_ARRIVAL = 2.2222)
+	Analysis results for task2cd.modest
+	Total time: 25.5 s
+	
+	+ Property queue_length_100
+	  Mean: 4.3278
+	  Runs: 5000
+	  Time: 25.5 s
+	
+	+ Property queue_length_200
+	  Mean: 5.54299999999999
+	  Runs: 5000
+	  Time: 25.5 s
+	
+	+ Property queue_length_400
+	  Mean: 6.95199999999999
+	  Runs: 5000
+	  Time: 25.5 s
+	
+	+ Property queue_length_800
+	  Mean: 7.775
+	  Runs: 5000
+	  Time: 25.5 s
+	
+	+ Property queue_length_1600
+	  Mean: 8.32619999999997
+	  Runs: 5000
+	  Time: 25.5 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        25.5 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 5000
+	  Time: 25.5 s
+
+When traffic intensity = 95% (T_ARRIVAL = 2.105)
+	Analysis results for task2cd.modest
+	Total time: 27.7 s
+	
+	+ Property queue_length_100
+	  Mean: 5.19479999999999
+	  Runs: 5000
+	  Time: 27.7 s
+	
+	+ Property queue_length_200
+	  Mean: 7.6122
+	  Runs: 5000
+	  Time: 27.7 s
+	
+	+ Property queue_length_400
+	  Mean: 9.90939999999995
+	  Runs: 5000
+	  Time: 27.7 s
+	
+	+ Property queue_length_800
+	  Mean: 13.1084
+	  Runs: 5000
+	  Time: 27.7 s
+	
+	+ Property queue_length_1600
+	  Mean: 15.2596
+	  Runs: 5000
+	  Time: 27.7 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        27.7 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 5000
+	  Time: 27.7 s
+
+When traffic intensity = 100% (T_ARRIVAL = 2)
+	Analysis results for task2cd.modest
+	Total time: 28.2 s
+	
+	+ Property queue_length_100
+	  Mean: 6.70280000000002
+	  Runs: 5000
+	  Time: 28.2 s
+	
+	+ Property queue_length_200
+	  Mean: 9.92060000000005
+	  Runs: 5000
+	  Time: 28.2 s
+	
+	+ Property queue_length_400
+	  Mean: 14.562
+	  Runs: 5000
+	  Time: 28.2 s
+	
+	+ Property queue_length_800
+	  Mean: 21.5758
+	  Runs: 5000
+	  Time: 28.2 s
+	
+	+ Property queue_length_1600
+	  Mean: 30.683
+	  Runs: 5000
+	  Time: 28.2 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        28.2 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 5000
+	  Time: 28.2 s
+
+When traffic intensity = 125% (T_ARRIVAL = 1.6)
+	Analysis results for task2cd.modest
+	Total time: 33.5 s
+	
+	+ Property queue_length_100
+	  Mean: 14.6228
+	  Runs: 5000
+	  Time: 33.5 s
+	
+	+ Property queue_length_200
+	  Mean: 27.6613999999999
+	  Runs: 5000
+	  Time: 33.5 s
+	
+	+ Property queue_length_400
+	  Mean: 53.2682000000001
+	  Runs: 5000
+	  Time: 33.5 s
+	
+	+ Property queue_length_800
+	  Mean: 103.5786
+	  Runs: 5000
+	  Time: 33.5 s
+	
+	+ Property queue_length_1600
+	  Mean: 202.3388
+	  Runs: 5000
+	  Time: 33.5 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        5000
+	  Time:        33.5 s
+	
+	+ Property q_100
+	  Mean: 776.944897252856
+	  Runs: 5000
+	  Time: 33.5 s
+	  
+Because the arrival rate is distributed with the average value of the t_arrival,
+the rate mainly can vary in an exponential way from 0 to t_arrival. The same can
+be said for the server processing time. So combining both of those distributions,
+we got non zero values for the different traffic intensities. The queue length
+increases as the traffic intensity also increases.
+
+*/
+
+// the queue length when time is equal to 100
+property queue_length_100 = Xmax(q | time == 100);
+// the queue length when time is equal to 200
+property queue_length_200 = Xmax(q | time == 200);
+// the queue length when time is equal to 400
+property queue_length_400 = Xmax(q | time == 400);
+// the queue length when time is equal to 800
+property queue_length_800 = Xmax(q | time == 800);
+// the queue length when time is equal to 1600
+property queue_length_1600 = Xmax(q | time == 1600);
+
+clock c;
+clock d;
+real t_arrival = 1.6;
+int q;
+
+real x,y;
+bool done = false;
+bool ser_idle = true;
+
+property pr_done = Pmax(<>(done));
+property q_100 = Xmax(time | q==100 || t_arrival >= 2);
+
+urgent tau {= c = 0, x = Exp(1/t_arrival) =}; 
+urgent tau {= d = 0, y = Exp(1/2) =};
+par{
+
+::do{ 
+		when(c >= x) urgent(c >= x) tau {= q++, c = 0, x = Exp(1/t_arrival) =}		
+	}
+
+::do{
+	when(q>0 && ser_idle && d>=y) urgent(d>=y) tau {=ser_idle=true,d=0, done=true, q--, y=Exp(1/2) =}
+	}
+}

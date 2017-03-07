@@ -1,0 +1,334 @@
+﻿/* Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+
+Task2ab Description:
+- This model defines the protocol that is described in the modeling 
+  lab 1 - task 2 for question a and b.
+- Two clocks are used, one for the queue and the other one is for the server
+  to avoid the race condition.
+
+Task2ab Modes setting:
+-Resolver: Uniform
+-Scheduler: Strict
+-Batch Size: 1
+-Runs: 1000
+-Show Initial State: False
+-Collect Traces: False
+
+Analysis results for task2ab.modest
+Total time: 7.6 s
+
+First result when T_ARRIVAL = 1
+	Analysis results for task2ab.modest
+	Total time: 8.1 s
+	
+	+ Property queue_length_100
+	  Mean: 50
+	  Runs: 1000
+	  Time: 8.1 s
+	
+	+ Property queue_length_200
+	  Mean: 100
+	  Runs: 1000
+	  Time: 8.1 s
+	
+	+ Property queue_length_400
+	  Mean: 200
+	  Runs: 1000
+	  Time: 8.1 s
+	
+	+ Property queue_length_800
+	  Mean: 400
+	  Runs: 1000
+	  Time: 8.1 s
+	
+	+ Property queue_length_1600
+	  Mean: 800
+	  Runs: 1000
+	  Time: 8.1 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        8.1 s
+	
+	+ Property q_100
+	  Mean: 198.498
+	  Runs: 1000
+	  Time: 8.1 s
+
+When traffic intensity = 50% (T_ARRIVAL = 4)
+	Analysis results for task2ab.modest
+	Total time: 2.5 s
+	
+	+ Property queue_length_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 2.5 s
+	
+	+ Property queue_length_200
+	  Mean: 0
+	  Runs: 1000
+	  Time: 2.5 s
+	
+	+ Property queue_length_400
+	  Mean: 0
+	  Runs: 1000
+	  Time: 2.5 s
+	
+	+ Property queue_length_800
+	  Mean: 0
+	  Runs: 1000
+	  Time: 2.5 s
+	
+	+ Property queue_length_1600
+	  Mean: 0
+	  Runs: 1000
+	  Time: 2.5 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        2.5 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 2.5 s
+
+When traffic intensity = 80% (T_ARRIVAL = 2.5)
+	Analysis results for task2ab.modest
+	Total time: 3.5 s
+	
+	+ Property queue_length_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 3.5 s
+	
+	+ Property queue_length_200
+	  Mean: 0
+	  Runs: 1000
+	  Time: 3.5 s
+	
+	+ Property queue_length_400
+	  Mean: 0
+	  Runs: 1000
+	  Time: 3.5 s
+	
+	+ Property queue_length_800
+	  Mean: 0
+	  Runs: 1000
+	  Time: 3.5 s
+	
+	+ Property queue_length_1600
+	  Mean: 0
+	  Runs: 1000
+	  Time: 3.5 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        3.5 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 3.5 s
+
+When traffic intensity = 90% (T_ARRIVAL = 2.2222)
+	Analysis results for task2ab.modest
+	Total time: 4.1 s
+	
+	+ Property queue_length_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.1 s
+	
+	+ Property queue_length_200
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.1 s
+	
+	+ Property queue_length_400
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.1 s
+	
+	+ Property queue_length_800
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.1 s
+	
+	+ Property queue_length_1600
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.1 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        4.1 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.1 s
+
+When traffic intensity = 95% (T_ARRIVAL = 2.105)
+	Analysis results for task2ab.modest
+	Total time: 4.3 s
+	
+	+ Property queue_length_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.3 s
+	
+	+ Property queue_length_200
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.3 s
+	
+	+ Property queue_length_400
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.3 s
+	
+	+ Property queue_length_800
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.3 s
+	
+	+ Property queue_length_1600
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.3 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        4.3 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.3 s
+
+When traffic intensity = 100% (T_ARRIVAL = 2)
+	Analysis results for task2ab.modest
+	Total time: 4.4 s
+	
+	+ Property queue_length_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.4 s
+	
+	+ Property queue_length_200
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.4 s
+	
+	+ Property queue_length_400
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.4 s
+	
+	+ Property queue_length_800
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.4 s
+	
+	+ Property queue_length_1600
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.4 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        4.4 s
+	
+	+ Property q_100
+	  Mean: 0
+	  Runs: 1000
+	  Time: 4.4 s
+
+When traffic intensity = 125% (T_ARRIVAL = 1.6)
+	Analysis results for task2ab.modest
+	Total time: 6.7 s
+	
+	+ Property queue_length_100
+	  Mean: 12
+	  Runs: 1000
+	  Time: 6.7 s
+	
+	+ Property queue_length_200
+	  Mean: 25
+	  Runs: 1000
+	  Time: 6.7 s
+	
+	+ Property queue_length_400
+	  Mean: 50
+	  Runs: 1000
+	  Time: 6.7 s
+	
+	+ Property queue_length_800
+	  Mean: 100
+	  Runs: 1000
+	  Time: 6.7 s
+	
+	+ Property queue_length_1600
+	  Mean: 200
+	  Runs: 1000
+	  Time: 6.7 s
+	
+	+ Property pr_done
+	  Probability: 1
+	  Runs:        1000
+	  Time:        6.7 s
+	
+	+ Property q_100
+	  Mean: 793.6
+	  Runs: 1000
+	  Time: 6.7 s
+	  
+The queue length does not increase until the traffic intensity is greater than 100%.
+When the traffic intensity is 125%, the queue takes around 800 seconds to reach a
+queue length of 100. 
+
+*/
+
+// the queue length when time is equal to 100
+property queue_length_100 = Xmax(q | time == 100);
+// the queue length when time is equal to 200
+property queue_length_200 = Xmax(q | time == 200);
+// the queue length when time is equal to 400
+property queue_length_400 = Xmax(q | time == 400);
+// the queue length when time is equal to 800
+property queue_length_800 = Xmax(q | time == 800);
+// the queue length when time is equal to 1600
+property queue_length_1600 = Xmax(q | time == 1600);
+
+clock c;
+clock d;
+real t_arrival = 1.6;
+int q;
+
+bool done = false;
+bool ser_idle = true;
+
+property pr_done = Pmax(<>(done));
+property q_100 = Xmax(time | q==100 || t_arrival >= 2);
+
+urgent tau {= c = 0 =}; 
+urgent tau {= d = 0 =};
+par{
+
+::do{ 
+		when(c >= t_arrival) urgent(c >= t_arrival) tau {= q++, c = 0 =}		
+	}
+
+::do{
+	when(q>0 && ser_idle && d>=2) urgent(d>=2) tau {=ser_idle=true,d=0, done=true, q--=}
+	}
+}

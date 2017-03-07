@@ -1,0 +1,92 @@
+The experiments were done with window size N =8 and varying the TIMEOUT values for 1000 simulation runs. 
+The 1000 simulation runs is large enough to give us a fairly good average of the 'Retransmit Count' and the 'Time Required' properties.
+The "Run Length Exceeded" error occurs when TIMEOUT<=4. This is as expected because the total RTT of the model is close to 4.
+
+The results of the experiments are:
+
+N	TIMEOUT	Retransmit	Time Required
+8	5		2115.12		1476.331836
+8	6		1705.853	1459.122425
+8	7		1400.102	1428.319684
+8	8		1180.92		1406.720404
+8	9		1001.449	1373.805769
+8	10		859.013		1340.909798
+8	11		747.014		1314.908641
+8	12		649.53		1282.674152
+8	13		570.915		1252.999016
+8	14		508.8		1233.065456
+8	15		456.394		1212.811876
+8	16		405.479		1186.401037
+8	17		371.111		1181.211525
+8	18		337.847		1172.277415
+8	19		310.029		1167.032446
+8	20		290.552		1169.520316
+8	21		268.451		1170.518557
+8	22		252.614		1177.479532
+8	23		237.171		1183.204052
+8	24		224.9		1194.837564
+8	25		212.852		1203.103922
+8	26		201.913		1211.259547
+8	27		192.102		1223.875358
+8	28		181.678		1229.252903
+8	29		177.042		1256.308735
+8	30		170.799		1273.206506
+8	31		164.31		1281.903046
+8	32		161.097		1307.24071
+8	33		154.613		1317.833645
+8	34		151.036		1340.984438
+8	35		147.558		1361.881817
+8	36		143.03		1373.571127
+8	40		131.2		1439.415973
+8	45		121.952		1522.367356
+8	50		119.254		1621.898595
+
+Using the data collected from these experiments, it is clear that the time required decreases when the TIMEOUT value increases from 5.
+It reaches a minimum value and then increases again, representing parabolic nature.
+
+However to find the optimum value taking into account both time required and retransmit values, the steps were done
+1. Both the graphs of "Time_Required" and "Retransmit_Count" were normalized and plotted.
+2. The point where the sum of both normalized values were minimum was found.
+3. The corresponding TIMEOUT value was found where the normalized sum was minimum.
+
+Optimum TIMEOUT value from this process, TIMEOUT = 23;
+
+The simulation re-run for N=8, TIMEOUT=23 is given below:
+
+Analysis results for go-back-n.modest
+Experiment N=8, TIMEOUT=23
+Total time: 21.4 s
+
++ Property ProbError
+  Probability: 0
+  Runs:        1000
+  Time:        21.4 s
+
++ Property DeliveredPackets
+  Mean: 128
+  Runs: 1000
+  Time: 21.4 s
+
++ Property DeliveredACKs
+  Mean: 128
+  Runs: 1000
+  Time: 21.4 s
+
++ Property LastDlvrd
+  Probability: 1
+  Runs:        1000
+  Time:        21.4 s
+
++ Property RetransmitCount
+  Mean: 235.728
+  Runs: 1000
+  Time: 21.4 s
+
++ Property TimeRequired
+  Mean: 1177.29859933007
+  Runs: 1000
+  Time: 21.4 s
+
+/* Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)*/

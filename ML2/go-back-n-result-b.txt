@@ -1,0 +1,33 @@
+Analysis results for go-back-n.modest
+Experiment N=4
+Total time: 113.4 s
+
++ Property ProbError
+  Probability: 0
+  Runs:        5000
+  Time:        113.4 s
+
++ Property DeliveredPackets
+  Mean: 128
+  Runs: 5000
+  Time: 113.4 s
+
++ Property DeliveredACKs
+  Mean: 128
+  Runs: 5000
+  Time: 113.4 s
+
++ Property RetransmitCount
+  Mean: 106.6698
+  Runs: 5000
+  Time: 113.4 s
+
++ Property TimeRequired
+  Mean: 1678.01311456602
+  Runs: 5000
+  Time: 113.4 s
+
+ /*Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+*/

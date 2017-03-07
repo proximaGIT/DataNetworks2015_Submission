@@ -1,0 +1,31 @@
+/*
+ * Group 7
+ * Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+ * Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+ *
+ */
+
+csma-aloha.modest
+  This file models the CSMA protocol with ALOHA back off scheme. When a 
+  collision is detected, after the transmission ends (1 time unit), it waits 
+  for 1 time unit and then try to retransmit with probability P or wait for 
+  another 1 time unit with probability (1-P). And because it is CSMA, it always
+  listen to the medium and wait until it is idle before transmitting (or 
+  retransmitting).
+csma-beb.modest
+  This file models the CSMA protocol with binary exponential back off scheme.
+  It is similar to csma-aloha.modest. The difference is that instead of wait 
+  for 1 time unit, it wait for K time unit when a collision happen. K is chosen 
+  randomly from  {0, 1, ..., (2^m)-1} and m is the number of collision that the 
+  current transmission have experienced. After it waited for K time unit, it
+  retransmit the transmission.
+csmacd-aloha.modest
+  This file models the CSMA/CD protocol with ALOHA back off scheme. It is very
+  similar to csma-aloha.modest. The only difference is that failed transmission
+  is stopped immediately when the collision is detected without waiting for the
+  data to be fully transmitted. 
+csmacd-BEB.modest
+  This file models the CSMA/CD protocol with binary exponential back off scheme. 
+  It is very similar to csma-beb.modest. The only difference is that failed 
+  transmission is stopped immediately when the collision is detected without
+  waiting for the data to be fully transmitted. 

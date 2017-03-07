@@ -1,0 +1,137 @@
+The windows size (N) according to the upper-layer throughput which is minimization of the time expected till the last packet arrives (t) is given by
+
+	N = PKT_COUNT-1;
+	
+Therefore, if the PKT_COUNT = 128, then the Window Size N = 127, will give the best throughput to the upper layer.
+
+Window size for best throughput to upper layer, N = 127;
+
+The window size must not be greater or equal to PKT_COUNT to avoid wrap around sequence number errors at the receiver. 
+Experiments were done with 5000 simulation runs so that we get a good average of the results. 
+
+However, we got "Run Length Exceeded" error when using such a large window. 
+This is to be expected, transmitting all 127 packets without any error is almost impossible, and the probability of this happening is very low.
+Hence there will always be retransmissions and will result in the "Run Length Exceeded" error.
+
+The result of the simulation with N=127 is given below: 
+
+Analysis results for go-back-n.modest
+Experiment N=127
+Total time: 146.3 s
+
++ Property ProbError
+  Probability: 0
+  Runs:        1685  (The number is less than 5000 due to RLE error)
+  Time:        146.3 s
+
++ Property DeliveredPackets
+  Mean: 128
+  Runs: 1685
+  Time: 146.3 s
+
++ Property DeliveredACKs
+  Mean: 128
+  Runs: 1685
+  Time: 146.3 s
+
++ Property LastDlvrd
+  Probability: 1
+  Runs:        1685
+  Time:        146.3 s
+
++ Property RetransmitCount
+  Mean: 2381.63976261127
+  Runs: 1685
+  Time: 146.3 s
+
++ Property TimeRequired
+  Mean: 1112.40638500733
+  Runs: 1685
+  Time: 146.3 s
+
+
+
+The Retransmit Count is very big when we use such a large value of Window Size.
+The increase in retransmissions increases the congestion in the network. And due to congestion the packets might actually get delayed even more.
+This was reinforced by the fact that we had "Run Length Exceeded" errors when we used large window size (>=112).
+The run length might be too long due so many frequent retransmissions during certain runs.
+Please keep in mind the "Run Length Exceeded" error doesn't occur for every single run for large window size, among the 1000 simulation runs one of them 'might' occur.
+
+Few more experiments were done with different Window Size, and the result is as follows:
+
+N	TIMEOUT		Time_Required	Retransmit_Count
+1	30			3951.227228		67.9772
+2	30			2405.913069		75.438
+3	30			1937.586836		91.562
+4	30			1678.013115		106.6698
+5	30			1514.358287		121.7452
+7	30			1324.680719		153.4698
+8	30			1266.420148		169.2796
+9	30			1229.77239		187.924
+10	30			1221.399016		210.5142
+11	30			1227.3611		237.4722
+13	30			1238.228213		290.5304
+15	30			1253.867111		347.4434
+19	30			1339.749224		486.4558
+20	30			1344.332624		515.0322
+21	30			1342.078876		540.6822
+24	30			1343.507803		617.5928
+32	30			1320.317563		804.0862
+48	30			1288.276377		1158.344
+64	30			1255.53779		1480.4008
+80	30			1217.234455		1755.8282
+96	30			1181.623737		2000.3794
+112	30			1146.438956		2218.802569
+127	30			1112.406385		2381.639763
+
+
+Using the data collected, it is clear that the "time required" to transmit and the "retransmit count" vary greatly over the different window sizes. 
+Therefore a trade-off point needs to be found where both are less for optimum transmission of packets from sender to receiver.
+
+To find this trade-off we did the following:
+1. Both the graphs of "Time_Required" and "Retransmit_Count" were normalized and plotted.
+2. The point where the sum of both normalized values were minimum was found.
+3. The corresponding window size was found where the normalized sum was minimum.
+
+Optimum Window Size from this process, N=8, which will result in a 3bit sequence number also.
+
+The simulation re-run for N=8 is given below:
+
+Analysis results for go-back-n.modest
+Experiment N=8, TIMEOUT=30
+Total time: 89.0 s
+
++ Property ProbError
+  Probability: 0
+  Runs:        5000
+  Time:        89.0 s
+
++ Property DeliveredPackets
+  Mean: 128
+  Runs: 5000
+  Time: 89.0 s
+
++ Property DeliveredACKs
+  Mean: 128
+  Runs: 5000
+  Time: 89.0 s
+
++ Property LastDlvrd
+  Probability: 1
+  Runs:        5000
+  Time:        89.0 s
+
++ Property RetransmitCount
+  Mean: 170.2998
+  Runs: 5000
+  Time: 89.0 s
+
++ Property TimeRequired
+  Mean: 1268.95877452778
+  Runs: 5000
+  Time: 89.0 s
+
+  
+/* Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)*/

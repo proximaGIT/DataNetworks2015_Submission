@@ -1,0 +1,146 @@
+﻿/*
+ * Group 7
+ * Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+ * Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+ *
+ * This file models the CSMA protocol with ALOHA back off scheme
+ * Use default setting in modes to run this model
+ *
+ */
+
+const int PACKETS; // total number of packets to send in one simulation run
+const real P; // probability p for the Aloha variants
+
+patient action send_start, send_stop;
+
+int packetsSent; // have each node increment this variable whenever it has sent a packet successfully (i.e. 1 time unit without collision)
+int[4] packetsToSend; // packetsToSend[i] is the number of packets available to send by node i; have node i decrement it as necessary (e.g. whenever it has successfully sent a packet)
+int[4] signals; // signals[i] is the number of transmissions currently being sensed at node i (i.e. signals[i] > 1 means that there is a collision); the value must only be changed by the SharedMedium process
+int[4] maxSignals; // maxSignals[i] is the maximum number of transmissions that have been sensed at node i since the start of the last transmission (to detect, at the end of a transmission, whether a collision occurred during the transmission); the value must only be changed by the SharedMedium process
+
+/* Do not change anything between the start of the file and this line */
+
+// Properties
+clock globalTimer;
+bool finish;
+property allPacketSent = Pmax(<> finish );
+property timeNeeded = Xmax(globalTimer | finish);
+
+// Models the multiple access protocol of node i;
+// use send_start to start a transmission (but only if packetsToSend[i] > 0)
+// and send_stop to stop transmitting (but no sooner than 0.5 time units after send_start)
+process Node(int i)
+{
+	// local clock
+	clock timer;
+	// status of the current transmission (retransmit or not)
+	bool retransmit = false;
+	// transmission status (transmitting or not)
+	bool transmitting = false;
+	// if it is set to true, it means that the node is waiting for the next 1 time unit to re-attempt retransmission
+	bool waitingNextSlot = false;
+	
+	do {
+	
+		// transmit new packets. only transmit when:
+		//	   1. there is a packet to send 
+		//    2. the node sense that the medium is idle (CSMA)
+		:: when(!retransmit && packetsToSend[i] > 0 && !transmitting && signals[i] == 0)
+			// start the timer (we want a transmission to have 1 time unit)
+			// set status as transmitting
+			urgent send_start {= timer = 0, transmitting = true =}
+			
+		// after 1 time unit, the transmission is done. 
+		// case 1:
+		// if maxSignal[i] is at most 1, then it means during the 1 time unit transmission
+		// only 1 node transmit a packet, which is this node. thus the transmission is successful
+		:: when (transmitting && timer >= 1 && maxSignals[i] <= 1 && !waitingNextSlot)
+			// set status as not transmitting (so that we can transmit the next packet (if there is one)
+			// if this is a retransmission, then set the retransmission status to false 
+			urgent(timer >= 1) send_stop {= 
+				transmitting = false,
+				packetsToSend[i]--,
+				packetsSent++,
+				finish = packetsSent + 1 == PACKETS,
+				retransmit = false
+			=}
+			
+		// after 1 time unit, the transmission is done. 
+		// case 2:
+		//   if maxSignal[i] is more than 1, then it means during the 1 time unit transmission
+		//   more than 1 nodes were transmiting. thus the transmission is not successful and
+		//   we have to retransmit it. (But need to wait for 1 time unit first)
+		:: when (transmitting && timer >= 1 && maxSignals[i] > 1)
+			urgent(timer >= 1) send_stop {= 
+				transmitting = false,
+				waitingNextSlot = true,
+				retransmit = true
+			=}
+			
+		// after 1 time unit, the node finished the wait. set the variables so that the node
+		// can reattempt the transmission.
+		:: when (!transmitting && timer >= 1 && waitingNextSlot)
+			urgent(timer >= 1) tau {= waitingNextSlot = false =}
+			
+		// we do retransmission when retransmit is set to true
+		// after 1 time unit (after the last transmission attempt), the node tries
+		// to retransmit the packet again with probability P (Aloha Backoff). But the node
+		// also need to wait until it sense that the medium is idle, so actually
+		// it might wait longer than 1. 
+		:: when (retransmit && !transmitting && !waitingNextSlot && signals[i] == 0)
+			urgent palt {
+				  :P: urgent send_start {= timer = 0, transmitting = true =}
+				  
+						// the node choose to wait (again) for 1 time unit to re-attempt retransmission
+				:1-P: urgent tau {= timer = 0, waitingNextSlot = true =}
+			}
+	}
+}
+
+/* Do not change anything between this line and the end of the file */
+
+// Models the upper layers of all nodes in one process
+process UpperLayers(int remainingPackets)
+{
+	when urgent(remainingPackets > 0) {= packetsToSend[DiscreteUniform(0, 3)]++, remainingPackets-- =};
+	delay(Exponential(1)) tau;
+	UpperLayers(remainingPackets)
+}
+
+// Models the physical-layer influence by node i; note the signal propagation time of up to 0.2 time units
+process SharedMedium(int i)
+{
+	clock c;
+	clock c1; real x1;
+	clock c2; real x2;
+	
+	par {
+	::	do {
+		when urgent(c1 >= x1) send_start {= c = 0, c1 = 0, x1 = Uniform(0.025, 0.05), maxSignals[i] = 0 =};
+		when urgent(c1 >= x1) {= signals[(i + 0) % 4]++, maxSignals[(i + 0) % 4] = max(maxSignals[(i + 0) % 4], signals[(i + 0) % 4] + 1), c1 = 0, x1 = Uniform(0.025, 0.05) =};
+		when urgent(c1 >= x1) {= signals[(i + 1) % 4]++, maxSignals[(i + 1) % 4] = max(maxSignals[(i + 1) % 4], signals[(i + 1) % 4] + 1), c1 = 0, x1 = Uniform(0.025, 0.05) =};
+		when urgent(c1 >= x1) {= signals[(i + 2) % 4]++, maxSignals[(i + 2) % 4] = max(maxSignals[(i + 2) % 4], signals[(i + 2) % 4] + 1), c1 = 0, x1 = Uniform(0.025, 0.05) =};
+		when urgent(c1 >= x1) {= signals[(i + 3) % 4]++, maxSignals[(i + 3) % 4] = max(maxSignals[(i + 3) % 4], signals[(i + 3) % 4] + 1), c1 = 0, x1 = Uniform(0.025, 0.05) =}
+		}
+	::	do {
+		when urgent(c >= 0.5) send_stop {= c2 = 0, x2 = Uniform(0.025, 0.05) =};
+		when urgent(c2 >= x2) {= signals[(i + 0) % 4]--, c2 = 0, x2 = Uniform(0.025, 0.05) =};
+		when urgent(c2 >= x2) {= signals[(i + 1) % 4]--, c2 = 0, x2 = Uniform(0.025, 0.05) =};
+		when urgent(c2 >= x2) {= signals[(i + 2) % 4]--, c2 = 0, x2 = Uniform(0.025, 0.05) =};
+		when urgent(c2 >= x2) {= signals[(i + 3) % 4]-- =}
+		}
+	}
+}
+
+patient action send_start_0, send_stop_0, send_start_1, send_stop_1, send_start_2, send_stop_2, send_start_3, send_stop_3;
+par {
+::	UpperLayers(PACKETS)
+::	relabel { send_start, send_stop } by { send_start_0, send_stop_0 } Node(0)
+::	relabel { send_start, send_stop } by { send_start_0, send_stop_0 } SharedMedium(0)
+::	relabel { send_start, send_stop } by { send_start_1, send_stop_1 } Node(1)
+::	relabel { send_start, send_stop } by { send_start_1, send_stop_1 } SharedMedium(1)
+::	relabel { send_start, send_stop } by { send_start_2, send_stop_2 } Node(2)
+::	relabel { send_start, send_stop } by { send_start_2, send_stop_2 } SharedMedium(2)
+::	relabel { send_start, send_stop } by { send_start_3, send_stop_3 } Node(3)
+::	relabel { send_start, send_stop } by { send_start_3, send_stop_3 } SharedMedium(3)
+}

@@ -1,0 +1,193 @@
+﻿/* Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+
+Task1c Description:
+-Added 2 time properties w.r.t the program in Task1ab (time_stud_leaves,time_5_questions_or_stud_leave)
+-All other things remain same as the program before
+-"time_stud_leaves" is the property to answer question "the expected time until the student leaves the lecture hall"
+-"time_5_questions_or_stud_leave" is the property to answer question "the expected time until either 5 questions have been answered, or the student leaves the lecture
+hall"
+
+Task1c Modes Settings:
+-Scheduler: ASAP
+-Batch Size: 1
+-Runs: 1000
+-Show Initial State: False
+-Collect Traces: False
+
+Task1c Results:
+Run1: Analysis results for task1c.modest
+				Total time: 0.1 s
+				
+				+ Property Pr_done
+				  Probability: 1
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property Pr_stud_leave_hall
+				  Probability: 1
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property Pr_stud_leave_hall_before
+				  Probability: 0.738
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property No_of_question_aswred
+				  Mean: 3.005
+				  Runs: 1000
+				  Time: 0.1 s
+				
+				+ Property time_stud_leaves
+				  Mean: 1844.60109027678
+				  Runs: 1000
+				  Time: 0.1 s
+				
+				+ Property time_5_questions_or_stud_leave
+				  Mean: 1237.40933411086
+				  Runs: 1000
+				  Time: 0.1 s
+
+				  
+Run2: Analysis results for task1c.modest
+				Total time: 0.1 s
+				
+				+ Property Pr_done
+				  Probability: 1
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property Pr_stud_leave_hall
+				  Probability: 1
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property Pr_stud_leave_hall_before
+				  Probability: 0.738
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property No_of_question_aswred
+				  Mean: 2.685
+				  Runs: 1000
+				  Time: 0.1 s
+				
+				+ Property time_stud_leaves
+				  Mean: 1750.31252823736
+				  Runs: 1000
+				  Time: 0.1 s
+				
+				+ Property time_5_questions_or_stud_leave
+				  Mean: 1231.19195016889
+				  Runs: 1000
+				  Time: 0.1 s
+				  
+				  
+Run3:Analysis results for task1c.modest
+				Total time: 0.1 s
+				
+				+ Property Pr_done
+				  Probability: 1
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property Pr_stud_leave_hall
+				  Probability: 1
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property Pr_stud_leave_hall_before
+				  Probability: 0.785
+				  Runs:        1000
+				  Time:        0.1 s
+				
+				+ Property No_of_question_aswred
+				  Mean: 2.363
+				  Runs: 1000
+				  Time: 0.1 s
+				
+				+ Property time_stud_leaves
+				  Mean: 1911.38197208328
+				  Runs: 1000
+				  Time: 0.1 s
+				
+				+ Property time_5_questions_or_stud_leave
+				  Mean: 1468.61298680212
+				  Runs: 1000
+				  Time: 0.1 s
+
+*/
+
+
+
+
+
+//actions initiated by the student
+action raise_hand, ask_question, leave_hall;
+//actions initiated by the lecturer
+action ack_question, answer_question, ignore_student;
+
+int n;
+int ignore_count;
+int ans_q_cnt;
+bool batch_finish = false;
+
+property Pr_done = Pmax(<> (done));
+property Pr_stud_leave_hall = Pmax(<> (stud_leave_hall));
+property Pr_stud_leave_hall_before = Pmax(<> (stud_leave_hall_before));
+property No_of_question_aswred = Xmax(ans_q_cnt | stud_leave_hall);
+
+property time_stud_leaves = Xmax(time | stud_leave_hall);
+property time_5_questions_or_stud_leave = Xmax(time | (stud_leave_hall || (ans_q_cnt>=5)));
+ 
+bool stud_leave_hall = false;
+bool stud_leave_hall_before = false;
+bool done = false;
+bool ask_again = false;
+real delay_time = 0;
+
+process student() {
+	do{
+		:: when(ignore_count < 3)
+			raise_hand {= batch_finish = false =};
+			alt {
+				:: ack_question;
+					ask_question;
+					answer_question{= n = 1, ask_again = Uni(0,1) <= 1 / (n + 1) =};
+					while(ask_again){
+						ask_question;
+						answer_question {= n++, ask_again = Uni(0,1) <= 1 / (n + 1) =}
+					};
+					tau {= batch_finish = true =}
+				:: ignore_student
+			};
+			delay(Exp(1/300)) tau 
+		:: when(ignore_count >= 3) 
+			leave_hall {= ignore_count = 0, stud_leave_hall = true, stud_leave_hall_before = (ans_q_cnt < 5) =}; break
+	};
+	tau {= done = true =}
+}
+
+process lecturer() {
+	do{
+		raise_hand;
+		palt {
+			:1: ack_question {= ignore_count = 0 =};
+				 do{
+				 	:: when(!batch_finish)
+						ask_question;
+						delay(Uni(30,120)) answer_question {= ans_q_cnt++ =}
+					:: when(batch_finish) break
+				 }
+			:3: ignore_student {= ignore_count++ =}
+		}
+	};
+	tau {= done = true =}
+}
+
+par {
+	:: student()
+	:: lecturer()
+}

@@ -1,0 +1,468 @@
+﻿/* Group 7
+Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+
+Task2e Description:
+- This model defines the protocol that is described in the modeling 
+  lab 1 - task 2 for question e.
+- Two clocks are used, one for the queue and the other one is for the server
+  to avoid the race condition.
+- The time_count is used to set an upper limit for the run length, this is almost equal to the actual time recorded in the software for time comparison,
+  however sufficient upper limit is given beyond the scope of the question which has a limit of 1600
+
+Task2e Modes setting:
+-Resolver: Uniform
+-Scheduler: Strict
+-Batch Size: 1
+-Runs: 5000
+-Show Initial State: False
+-Collect Traces: False
+
+First result when T_ARRIVAL = 1
+	Analysis results for task2e.modest
+	Total time: 43.6 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 1
+	  Runs:        5000
+	  Time:        43.6 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 1
+	  Runs:        5000
+	  Time:        43.6 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 1
+	  Runs:        5000
+	  Time:        43.6 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 1
+	  Runs:        5000
+	  Time:        43.6 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 1
+	  Runs:        5000
+	  Time:        43.6 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 20.4856
+	  Runs: 5000
+	  Time: 43.6 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 45.4096
+	  Runs: 5000
+	  Time: 43.6 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 95.4726000000001
+	  Runs: 5000
+	  Time: 43.6 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 195.5162
+	  Runs: 5000
+	  Time: 43.6 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 395.4778
+	  Runs: 5000
+	  Time: 43.6 s
+
+
+When traffic intensity = 50% (T_ARRIVAL = 4)
+	Analysis results for task2e.modest
+	Total time: 33.0 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 0.0032
+	  Runs:        5000
+	  Time:        33.0 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 0.00459999999999999
+	  Runs:        5000
+	  Time:        33.0 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 0.0078
+	  Runs:        5000
+	  Time:        33.0 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 0.0126
+	  Runs:        5000
+	  Time:        33.0 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 0.0222
+	  Runs:        5000
+	  Time:        33.0 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 0.00359999999999999
+	  Runs: 5000
+	  Time: 33.0 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 0.00699999999999999
+	  Runs: 5000
+	  Time: 33.0 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 0.0102
+	  Runs: 5000
+	  Time: 33.0 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 0.0166
+	  Runs: 5000
+	  Time: 33.0 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 0.0314
+	  Runs: 5000
+	  Time: 33.0 s
+
+	  
+When traffic intensity = 80% (T_ARRIVAL = 2.5)
+	Analysis results for task2e.modest
+	Total time: 52.6 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 0.1114
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 0.226
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 0.419800000000001
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 0.662200000000001
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 0.8896
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 0.2026
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 0.5224
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 1.1768
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 2.433
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 4.95139999999999
+	  Runs: 5000
+	  Time: 52.6 s
+
+
+When traffic intensity = 90% (T_ARRIVAL = 2.2222)
+	Analysis results for task2e.modest
+	Total time: 55.9 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 0.2374
+	  Runs:        5000
+	  Time:        55.9 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 0.465599999999999
+	  Runs:        5000
+	  Time:        55.9 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 0.737799999999999
+	  Runs:        5000
+	  Time:        55.9 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 0.936200000000003
+	  Runs:        5000
+	  Time:        55.9 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 0.996200000000001
+	  Runs:        5000
+	  Time:        55.9 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 0.542599999999998
+	  Runs: 5000
+	  Time: 55.9 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 1.478
+	  Runs: 5000
+	  Time: 55.9 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 3.36720000000001
+	  Runs: 5000
+	  Time: 55.9 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 6.97400000000002
+	  Runs: 5000
+	  Time: 55.9 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 14.28
+	  Runs: 5000
+	  Time: 55.9 s
+
+When traffic intensity = 95% (T_ARRIVAL = 2.105)
+	Analysis results for task2e.modest
+	Total time: 54.7 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 0.324
+	  Runs:        5000
+	  Time:        54.7 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 0.579000000000002
+	  Runs:        5000
+	  Time:        54.7 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 0.843
+	  Runs:        5000
+	  Time:        54.7 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 0.9798
+	  Runs:        5000
+	  Time:        54.7 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 0.9994
+	  Runs:        5000
+	  Time:        54.7 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 0.846600000000001
+	  Runs: 5000
+	  Time: 54.7 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 2.2396
+	  Runs: 5000
+	  Time: 54.7 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 5.05379999999999
+	  Runs: 5000
+	  Time: 54.7 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 10.6324
+	  Runs: 5000
+	  Time: 54.7 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 21.7304
+	  Runs: 5000
+	  Time: 54.7 s
+
+
+When traffic intensity = 100% (T_ARRIVAL = 2)
+	Analysis results for task2e.modest
+	Total time: 52.6 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 0.4158
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 0.7002
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 0.925599999999999
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 0.994200000000001
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 1
+	  Runs:        5000
+	  Time:        52.6 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 1.2284
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 3.21779999999999
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 7.15380000000002
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 15.1964
+	  Runs: 5000
+	  Time: 52.6 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 31.0722
+	  Runs: 5000
+	  Time: 52.6 s
+
+
+When traffic intensity = 125% (T_ARRIVAL = 1.6)
+	Analysis results for task2e.modest
+	Total time: 42.6 s
+	
+	+ Property prob_dropped_before_100
+	  Probability: 0.8232
+	  Runs:        5000
+	  Time:        42.6 s
+	
+	+ Property prob_dropped_before_200
+	  Probability: 0.980799999999998
+	  Runs:        5000
+	  Time:        42.6 s
+	
+	+ Property prob_dropped_before_400
+	  Probability: 1
+	  Runs:        5000
+	  Time:        42.6 s
+	
+	+ Property prob_dropped_before_800
+	  Probability: 1
+	  Runs:        5000
+	  Time:        42.6 s
+	
+	+ Property prob_dropped_before_1600
+	  Probability: 1
+	  Runs:        5000
+	  Time:        42.6 s
+	
+	+ Property expected_drop_before_100
+	  Mean: 4.2208
+	  Runs: 5000
+	  Time: 42.6 s
+	
+	+ Property expected_drop_before_200
+	  Mean: 10.736
+	  Runs: 5000
+	  Time: 42.6 s
+	
+	+ Property expected_drop_before_400
+	  Mean: 24.031
+	  Runs: 5000
+	  Time: 42.6 s
+	
+	+ Property expected_drop_before_800
+	  Mean: 50.5876000000001
+	  Runs: 5000
+	  Time: 42.6 s
+	
+	+ Property expected_drop_before_1600
+	  Mean: 103.5618
+	  Runs: 5000
+	  Time: 42.6 s
+
+	  
+The probability that a request drop occurs before a certain time increases with increasing traffic intensity as the results show
+The number of requests dropped at given time also increases with increasing traffic intensity
+*/
+clock c;
+clock d;
+real time_count;
+real t_arrival = 1.6;
+int q, dropped=0;
+int q_limit = 10;
+
+real x,y;
+bool done = false;
+bool ser_idle = true;
+bool one_drop = false;
+
+//property pr_done = Pmax(<>(done));
+//property q_100 = Xmax(time | q>=q_limit || t_arrival >= 2);
+
+//Probablity of request drop before time 100
+property prob_dropped_before_100 = Pmax(<>(one_drop && time<100));
+//Probablity of request drop before time 200
+property prob_dropped_before_200 = Pmax(<>(one_drop && time<200));
+//Probablity of request drop before time 400
+property prob_dropped_before_400 = Pmax(<>(one_drop && time<400));
+//Probablity of request drop before time 800
+property prob_dropped_before_800 = Pmax(<>(one_drop && time<800));
+//Probablity of request drop before time 1600
+property prob_dropped_before_1600 = Pmax(<>(one_drop && time<1600));
+
+//Number of dropped requests before time 100
+property expected_drop_before_100 = Xmax(dropped | time==100);
+//Number of dropped requests before time 200
+property expected_drop_before_200 = Xmax(dropped | time==200);
+//Number of dropped requests before time 400
+property expected_drop_before_400 = Xmax(dropped | time==400);
+//Number of dropped requests before time 800
+property expected_drop_before_800 = Xmax(dropped | time==800);
+//Number of dropped requests before time 1600
+property expected_drop_before_1600 = Xmax(dropped | time==1600);
+
+urgent tau {= c = 0, x = Exp(1/t_arrival) =}; 
+urgent tau {= d = 0, y = Exp(1/2) =};
+
+par{
+
+::while(time_count<=4000){
+	if(q<=q_limit){ 
+		when(c >= x) urgent(c >= x) tau {= time_count+=x, q++, c = 0, x = Exp(1/t_arrival) =}
+		}
+	else
+		{
+		when(c >= x) urgent(c >= x) tau {= 
+				time_count+=x,
+				dropped++, 
+				c = 0, 
+				x = Exp(1/t_arrival), q = q_limit, one_drop = true
+			=}
+		}
+	}
+
+::while(time_count<=4000){
+	when(q>0 && ser_idle && d>=y) urgent(d>=y) tau {=ser_idle=true,d=0, done=true, q--, y=Exp(1/2) =}
+	}
+}

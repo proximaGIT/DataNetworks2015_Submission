@@ -1,0 +1,285 @@
+﻿/*
+ * Group 7
+ * Muhammad Lathif Pambudi <s8mupamb@stud.uni-saarland.de> (2556858)
+ * Praharsha Sirsi <s8prsirs@stud.uni-saarland.de> (2557724)
+ *
+ * This file contains the description of Go-Back-N protocol behaviour in modest.
+ * To run this file in modes default setting can be used.
+ *
+ */
+  
+patient action rdt_snd, udt_snd_s, udt_snd_s_done, udt_snd_r, udt_snd_r_done, rdt_rcv_s, rdt_rcv_r, deliver_data, deliver_data_done;
+patient action timeout, drop_data;
+
+datatype packet = {
+	int seqnum,
+	int data // unused in ACKs
+};
+
+// Packet lists
+datatype packetlist = { packet hd, packetlist option tl };
+function int length(packetlist option ls) = // returns the length of packet list <ls>
+	if ls == null then 0 else 1 + length(ls!.tl);
+function packet at(packetlist option ls, int index) = // returns the packet at index <index> in packet list <ls>
+	if index == 0 then ls!.hd else at(ls!.tl, index - 1);
+function packetlist append(packetlist option ls, packet item) = // inserts packet <item> at the end of packet list <ls>
+	if ls == none then packetlist { hd: item, tl: none } else packetlist { hd: ls!.hd, tl: append(ls!.tl, item) };
+function packetlist option remove(packetlist option ls, int count) = // removes the first <count> packets from packet list <ls>
+	if ls == none then none else if count == 0 then ls else remove(ls!.tl, count - 1);
+
+// real lists (used internally by the channels)
+datatype reallist = { real hd, reallist option tl };
+function reallist appendR(reallist option ls, real item) =
+	if ls == none then reallist { hd: item, tl: none } else reallist { hd: ls!.hd, tl: appendR(ls!.tl, item) };
+
+// Model parameters
+const int N; // window size
+const int PKT_COUNT = 128; // number of app-layer messages to send
+const int PKT_LOSS_PROB = 10; // probability (in %) to lose a packet
+const int ACK_LOSS_PROB = 10; // probability (in %) to lose an acknowledgment
+const int PKT_TRANS_DELAY = 2; // transmission delay of a packet (do not change)
+const int PKT_PROP_DELAY = 10; // average propagation delay of a packet (do not change)
+const int ACK_TRANS_DELAY = 1; // transmission delay of an acknowledgment (do not change)
+const int ACK_PROP_DELAY = 10; // average propagation delay of an acknowledgment (do not change)
+
+// Basic error checking: ProbError should be 0 and DeliveredPackets should be PKT_COUNT
+bool hasError;
+bool lastDelivered;
+int deliveredPacketCount;
+property ProbError = Pmax(<> (hasError || lastDelivered && deliveredPacketCount != PKT_COUNT));
+property DeliveredPackets = Xmax(deliveredPacketCount | lastDelivered);
+
+// Properties
+// Insert your properties here
+bool lastACKdelivered; // will be set to true when last ACK has been received by Sender
+int deliveredACKcount; // number of correct ACK received (should be equal to PKT_COUNT)
+property DeliveredACKs = Xmax(deliveredACKcount | lastACKdelivered);
+// number of retransmit property (total transmit - number of packets)
+int retransmitCount;		
+property RetransmitCount = Xmax(retransmitCount | lastDelivered);
+// global timer to keep track of the time required to transmit all packets
+clock globalClock;
+property TimeRequired = Xmax(globalClock | lastDelivered);
+
+// Upper layers on sender side
+// Do not modify this process
+process UpperLayerSender()
+{
+	int i;
+	clock c;
+
+	do {
+		when urgent(i < PKT_COUNT) rdt_snd {= usdata = (i + 23635) % 16384, i++ =}
+	}
+}
+
+// RDT implementation on sender side
+const int TIMEOUT = 30; // sender timeout
+int usdata; // data buffer from upper layer to sender
+packet cspacket; // data buffer from channel to sender
+process Sender()
+{
+   int nextSeqNum = 0;                 // next transmitted sequence number 
+	int lastACKed = -1;                 // last ACKed seq num
+	bool transmitting = false;          // "transmitting to channel" status
+	packetlist option notACKed = none;  // the window. list of packets that have not been ACKed
+	int nextTransmitted = 0;            // auxiliary variable, will be used in timeout retransmission
+	var timer; der(timer) = 1;          // timer for timeout
+	bool ackReceived = false;           // "ack received" status
+	int transmittedCount;               // number of transmitted packet (should be at most PKT_COUNT)
+	
+	par {
+	// Get data from upper layer
+	:: do {
+			// Get the first N packet from upper layer
+			:: when(!transmitting && length(notACKed) < N && !ackReceived)  urgent rdt_snd {= 
+					transmitting=true
+				=}
+			// Get the next packet when correct ack has been received (new slot available in the window)
+			:: when(ackReceived && cspacket.seqnum > lastACKed) urgent rdt_snd {=
+					transmitting=true,
+					ackReceived = false,
+					// remove the ACKed packet from the window
+					lastACKed = cspacket.seqnum,
+					notACKed = remove(notACKed, cspacket.seqnum - lastACKed),
+					deliveredACKcount = deliveredACKcount + cspacket.seqnum - lastACKed,
+					// check whether this is the last ACK
+					lastACKdelivered = lastDelivered && (length(notACKed) - (cspacket.seqnum - lastACKed) == 0)
+				=}
+		}
+	// Send data to channelSR
+	:: do {
+			// Transmit new packet to the channel
+			:: when(transmitting) urgent udt_snd_s {=  
+					scpacket.seqnum = nextSeqNum,
+					scpacket.data = usdata,
+					transmittedCount++,
+					nextSeqNum++
+				=};
+				urgent udt_snd_s_done {= 
+					notACKed = append(notACKed, scpacket),   // put the packet in the window
+					transmitting = false,
+					timer = 0                                // restart the timer
+				=}
+			// Retransmit packets in the window because of timeout
+			:: when(timer >= TIMEOUT && nextTransmitted < length(notACKed)) urgent (timer >= TIMEOUT) udt_snd_s {=  
+					scpacket = at(notACKed, nextTransmitted),
+					retransmitCount++,
+					nextTransmitted++
+				=};
+				urgent udt_snd_s_done {= 
+					// restart timer if all packets in the window have been retransmitted
+					timer = nextTransmitted == length(notACKed)? 0 : timer , 
+					// set nextTransmitted to 0 if all packets in the window have been retransmitted
+					nextTransmitted = nextTransmitted == length(notACKed)? 0 : nextTransmitted 
+				=}
+		}
+	// Retrieve ACK from channelRS
+	:: do {
+			// ACK received. Set the "ack received" status
+			:: when(!transmitting && !ackReceived && (length(notACKed) == N || transmittedCount == PKT_COUNT)) urgent rdt_rcv_s {=
+					ackReceived = true
+				=}
+			// Wrong ACK received. Ignore it. Set the "ack received" status to false
+			:: when (ackReceived && cspacket.seqnum <= lastACKed) urgent tau {= ackReceived = false =}
+			// Correct ACK received but there is no more packet to be send.
+			:: when (ackReceived && cspacket.seqnum > lastACKed && transmittedCount == PKT_COUNT) urgent tau {=
+					ackReceived = false,
+					// remove the ACKed packet from the window
+					notACKed = remove(notACKed, cspacket.seqnum - lastACKed),
+					lastACKed = cspacket.seqnum,
+					deliveredACKcount = deliveredACKcount + cspacket.seqnum - lastACKed,
+					// check whether this is the last ACK
+					lastACKdelivered = lastDelivered && (length(notACKed) - (cspacket.seqnum - lastACKed) == 0)
+				=}
+		}
+	}
+}
+
+// UDT service from sender to receiver: has a send buffer of 16 packets and loses PKT_LOSS_PROB out of 100 packets
+// Do not modify this process
+packet scpacket; // data buffer from sender to channel
+process ChannelSR()
+{
+	packetlist option packets;
+	reallist option packetTimes;
+	var timer; der(timer) = 1;
+	real sendUntil;
+	
+	par {
+	::	do
+		{	// Get packets
+			urgent udt_snd_s;
+			urgent alt {
+			::	when(length(packets) <= 16) udt_snd_s_done palt {
+				:100-PKT_LOSS_PROB:
+					{=	sendUntil = max(sendUntil + PKT_TRANS_DELAY, timer + PKT_TRANS_DELAY),
+						packets = append(packets, scpacket),
+						packetTimes = appendR(packetTimes, max(sendUntil + PKT_TRANS_DELAY, timer + PKT_TRANS_DELAY) + Exp(1/PKT_PROP_DELAY)) =}
+				:PKT_LOSS_PROB:
+					{= sendUntil = max(sendUntil + PKT_TRANS_DELAY, timer + PKT_TRANS_DELAY) =}
+				}
+			::	when(length(packets) > 16) udt_snd_s_done // queue overflow, drop packet
+			}
+		}
+	::	do
+		{	// Deliver packets
+			when urgent(packets != none && timer >= packetTimes!.hd) rdt_rcv_r {= crpacket = packets!.hd, packets = packets!.tl, packetTimes = packetTimes!.tl =}
+		}
+	}
+}
+
+// UDT service from receiver to sender: has a send buffer of 16 packets and loses ACK_LOSS_PROB out of 100 packets
+// Do not modify this process
+packet rcpacket; // data buffer from receiver to channel
+process ChannelRS()
+{
+	packetlist option packets;
+	reallist option packetTimes;
+	var timer; der(timer) = 1;
+	real sendUntil;
+	
+	par {
+	::	do
+		{	// Get packets
+			urgent udt_snd_r;
+			urgent alt {
+			::	when(length(packets) <= 16) urgent udt_snd_r_done palt {
+				:100-PKT_LOSS_PROB:
+					{=	sendUntil = max(sendUntil + ACK_TRANS_DELAY, timer + ACK_TRANS_DELAY),
+						packets = append(packets, rcpacket),
+						packetTimes = appendR(packetTimes, max(sendUntil + ACK_TRANS_DELAY, timer + ACK_TRANS_DELAY) + Exp(1/ACK_PROP_DELAY)) =}
+				:PKT_LOSS_PROB:
+					{= sendUntil = max(sendUntil + ACK_TRANS_DELAY, timer + ACK_TRANS_DELAY) =}
+				}
+			::	when(length(packets) > 16) udt_snd_r_done // queue overflow, drop packet
+			}
+		}
+	::	do
+		{	// Deliver packets
+			when urgent(packets != none && timer >= packetTimes!.hd) rdt_rcv_s {= cspacket = packets!.hd, packets = packets!.tl, packetTimes = packetTimes!.tl =}
+		}
+	}
+}
+
+// RDT implementation on receiver side
+packet crpacket; // data buffer from channel to receiver
+process Receiver()
+{
+   bool deliver_packet = false;	// "deliver packet to upper layer" status
+	bool send_ack = false;			// "send ack to channel" status
+	int expectedSeqNum = 0;			// expected next seq num to be received
+	
+	par {
+	// Get packets from channelSR
+	:: do {
+			// nothing much to do. set the status as "send ack"
+			when (!deliver_packet && !send_ack) urgent rdt_rcv_r {=
+				send_ack = true
+			=}
+	   }
+	// Send ACKs to channelRS
+	:: do {
+			when(send_ack && !deliver_packet) urgent udt_snd_r {=
+				// set the correct ACK seq num. if expected seq num is received, then we send ACK for
+				// current seq num. if not then we send ACK for the previous seq num
+				rcpacket.seqnum = crpacket.seqnum == expectedSeqNum ? crpacket.seqnum : expectedSeqNum - 1
+			=};
+			urgent udt_snd_r_done {= 
+				send_ack = false,
+				// if expected seq num is received, then we deliver packet to upper layer
+				deliver_packet = crpacket.seqnum == expectedSeqNum,
+				expectedSeqNum = crpacket.seqnum == expectedSeqNum ? expectedSeqNum+1 : expectedSeqNum
+			=}
+	   }
+	// Deliver packets to upper layer
+   :: do {
+			// nothing much to do. set the current retrieved data to the rudata buffer
+			when(deliver_packet) urgent deliver_data {= 
+				rudata = crpacket.data
+			=}; 
+			urgent deliver_data_done {= deliver_packet = false =}
+	   }
+	}
+}
+
+// Upper layers on receiver side: count packets and make sure there is no duplicate data
+// Do not modify this process.
+int rudata; // data buffer from receiver to upper layer
+process UpperLayerReceiver()
+{
+	int nextData = 23635 % 16384;
+	do {
+		urgent deliver_data;
+		urgent deliver_data_done {= deliveredPacketCount++, lastDelivered = rudata == (23634 + PKT_COUNT) % 16384, hasError = hasError || rudata != nextData, nextData = rudata == nextData ? (nextData + 1) % 16384 : nextData =}
+	}
+}
+
+par {
+::	UpperLayerSender()
+::	Sender()
+::	ChannelSR()
+::	ChannelRS()
+::	Receiver()
+::	UpperLayerReceiver()
+}
